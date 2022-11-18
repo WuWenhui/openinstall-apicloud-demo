@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        #wrap {
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
+
+        #header {
+            text-align: center;
+            background-color: #81a9c3;
+            color: #fff;
+            width: 100%;
+        }
+
+        #header h1 {
+            font-size: 20px;
+            height: 44px;
+            line-height: 44px;
+            margin: 0em;
+            color: #fff;
+        }
+
+        #main {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        #footer {
+            height: 30px;
+            line-height: 30px;
+            background-color: #81a9c3;
+            width: 100%;
+            text-align: center;
+        }
+
+        #footer h5 {
+            color: white;
+        }
+
+        .con {
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .flex-con {
+            overflow: auto
+        }
+
+        a.button {
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            height: 36px;
+            margin: 8px;
+            background-color: rgba(240, 240, 240, 1.0);
+            border-color: rgba(220, 220, 220, 1.0);
+            border-width: 2px;
+            border-style: solid;
+        }
+
+        a.active {
+            background-color: rgba(240, 240, 240, 0.6);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+            <h1 id="title">openinstall模块示例</h1>
+        </header>
+        <div id="main">
+            <a class="button" tapmode="active" onclick="getInstall();">测试获取安装参数</a>
+            <br/><br/>
+            <a class="button" tapmode="active" onclick="reportRegister();">测试注册量统计</a>
+            <br/><br/>
+            <a class="button" tapmode="active" onclick="reportEffectPoint();">测试效果点统计</a>
+            <br/><br/>
+        </div>
+    </div>
+</body>
+<script>
+    apiready = function() {
+
+        var openinstallModule = api.require('openinstall');
+        // Android 广告平台配置
+        openinstallModule.config({
+            androidId: undefined,
+            serialNumber: null,
+            adEnabled: true,
+            oaid : "123456",
+            gaid:null,
+            imei:"",
+        });
+        // 初始化（必须调用）
+        openinstallModule.init();
+        // getInstallCanRetry
+        openinstallModule.getInstallCanRetry({
+            timeout: 1
+        }, function(ret, err) {
+            api.alert({
+                title: 'getInstallCanRetry',
+                msg: ret,
+            });
+        });
+        // 应用唤醒监听
+        api.addEventListener({
+            name: 'appintent'
+        }, function(ret, err) {
+            // 将唤醒数据传递给 openinstall 处理
+            openinstallModule.getWakeup({
+                "alwaysCallback": true,
+                "uri": ret
+            }, function(ret) {
+              api.alert({
+                  title: 'getWakeup',
+                  msg: ret,
+              });
+            });
+        });
+    };
+
+
+    // 获取安装参数
+    function getInstall() {
+        var openinstallModule = api.require('openinstall');
+        openinstallModule.getInstall({
+            timeout: 10
+        }, function(ret, err) {
+            api.alert({
+                title: 'getInstall',
+                msg: ret,
+            });
+        });
+    };
+
+    // 注册统计（在用户完成APP注册流程后调用）
+    function reportRegister() {
+        var openinstallModule = api.require('openinstall');
+        openinstallModule.reportRegister(function(ret, err) {
+            api.alert({
+                title: 'reportRegister',
+                msg: "注册上报完成",
+            });
+        });
+    };
+
+    // 效果点统计
+    function reportEffectPoint() {
+        var openinstallModule = api.require('openinstall');
+        openinstallModule.reportEffectPoint({
+            effectId: "effect_test",
+            effectValue: 1
+        }, function(ret, err) {
+            api.alert({
+                title: 'reportEffectPoint',
+                msg: "效果点上报完成",
+            });
+        });
+    };
+</script>
+
+</html>
