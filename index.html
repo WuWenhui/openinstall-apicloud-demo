@@ -95,6 +95,7 @@
             <br/><br/>
             <a class="button" tapmode="active" onclick="reportEffectPoint();">测试效果点统计</a>
             <br/><br/>
+            <a class="button" tapmode="active" onclick="reportEffectDetail();">测试效果点明细</a>
         </div>
     </div>
 </body>
@@ -176,6 +177,25 @@
                 msg: "效果点上报完成",
             });
         });
+    };
+
+    // 效果点明细
+    function reportEffectDetail() {
+        var openinstallModule = api.require('openinstall');
+        openinstallModule.reportEffectPoint({
+            effectId: "effect_detail",
+            effectValue: 1,
+            extras : {
+                "deviceId": api.deviceId,
+                "model": api.deviceModel,
+            }
+        }, function(ret, err) {
+            api.alert({
+                title: 'reportEffectPoint',
+                msg: "效果点上报完成",
+            });
+        });
+        
     };
 </script>
 
